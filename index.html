@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>WZ-lab</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <div class="notch"></div>
+
+  <!-- ============ SPLASH ============ -->
+  <div class="screen active" id="screen-splash">
+    <div class="splash-logo">WZ</div>
+    <div class="splash-title">WZ-lab</div>
+    <div class="splash-sub">AI Photo &amp; Video Studio</div>
+  </div>
+
+  <!-- ============ LOGIN ============ -->
+  <div class="screen" id="screen-login">
+    <div class="auth-wrap">
+      <div class="auth-logo">WZ</div>
+      <div class="auth-h1">Welcome back</div>
+      <div class="auth-sub">Log in to keep editing your projects</div>
+
+      <input class="field" id="login-username" placeholder="Username" autocomplete="username">
+      <div class="pw-row">
+        <input class="field" id="login-password" type="password" placeholder="Password" autocomplete="current-password">
+        <span class="pw-toggle" onclick="togglePw('login-password',this)">SHOW</span>
+      </div>
+      <div class="err" id="login-err"></div>
+
+      <button class="btn-primary" onclick="handleLogin()">Log In</button>
+
+      <div class="divider">or</div>
+      <button class="btn-primary" style="background:var(--card);color:var(--text);border:1px solid var(--line);" onclick="quickDemo()">Continue as Guest</button>
+
+      <div class="auth-foot">Don't have an account? <span class="link" onclick="showScreen('screen-signup')">Sign up</span></div>
+    </div>
+  </div>
+
+  <!-- ============ SIGNUP ============ -->
+  <div class="screen" id="screen-signup">
+    <div class="auth-wrap">
+      <div class="auth-logo">WZ</div>
+      <div class="auth-h1">Create account</div>
+      <div class="auth-sub">Join WZ-lab and start creating</div>
+
+      <input class="field" id="su-name" placeholder="Full name">
+      <input class="field" id="su-username" placeholder="Username" autocomplete="username">
+      <input class="field" id="su-email" placeholder="Email" type="email">
+      <div class="pw-row">
+        <input class="field" id="su-password" type="password" placeholder="Password (min 4 chars)" autocomplete="new-password">
+        <span class="pw-toggle" onclick="togglePw('su-password',this)">SHOW</span>
+      </div>
+      <div class="err" id="su-err"></div>
+
+      <button class="btn-primary" onclick="handleSignup()">Sign Up</button>
+
+      <div class="auth-foot">Already have an account? <span class="link" onclick="showScreen('screen-login')">Log in</span></div>
+    </div>
+  </div>
+
+  <!-- ============ HOME ============ -->
+  <div class="screen" id="screen-home">
+    <div class="topbar">
+      <div class="brand">WZ-lab</div>
+      <div style="display:flex;gap:10px;">
+        <div class="icon-btn" onclick="toast('Search coming soon')">🔍</div>
+        <div class="icon-btn" onclick="goMe()" id="home-avatar-btn">👤</div>
+      </div>
+    </div>
+
+    <div class="scroll">
+      <div class="promo">
+        <div class="promo-tag">Portrait Magic ✨</div>
+        <div class="promo-sub">Turn any selfie into studio-quality art</div>
+        <button class="promo-btn" onclick="openEditor()">Try Now</button>
+      </div>
+
+      <button class="new-project" onclick="openEditor()">＋ New Project</button>
+
+      <div class="tool-grid" id="tool-grid"></div>
+
+      <div class="section-title">Recent Projects</div>
+      <div class="recent-row" id="recent-row">
+        <div class="recent-card">No projects yet</div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item active" data-nav="home" onclick="switchNav('home')"><div class="nav-ico">🏠</div>Home</div>
+      <div class="nav-item" data-nav="templates" onclick="switchNav('templates')"><div class="nav-ico">🗂️</div>Templates</div>
+      <div class="nav-item" data-nav="me" onclick="switchNav('me')"><div class="nav-ico">🙂</div>Me</div>
+    </div>
+  </div>
+
+  <!-- ============ TEMPLATES ============ -->
+  <div class="screen" id="screen-templates">
+    <div class="topbar"><div class="brand">Templates</div><div></div></div>
+    <div class="scroll" style="padding:0 18px;">
+      <div class="section-title" style="padding-left:0;">Trending</div>
+      <div class="tool-grid" style="grid-template-columns:repeat(2,1fr);" id="template-grid"></div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item" data-nav="home" onclick="switchNav('home')"><div class="nav-ico">🏠</div>Home</div>
+      <div class="nav-item active" data-nav="templates" onclick="switchNav('templates')"><div class="nav-ico">🗂️</div>Templates</div>
+      <div class="nav-item" data-nav="me" onclick="switchNav('me')"><div class="nav-ico">🙂</div>Me</div>
+    </div>
+  </div>
+
+  <!-- ============ ME ============ -->
+  <div class="screen" id="screen-me">
+    <div class="scroll">
+      <div class="profile-hero">
+        <div class="avatar" id="me-avatar">G</div>
+        <div class="profile-name" id="me-name">Guest</div>
+        <div class="profile-email" id="me-email">guest@wz-lab.app</div>
+      </div>
+      <div class="menu-list">
+        <div class="menu-item"><div class="mi-left"><div class="menu-ico">💎</div>Go Premium</div>›</div>
+        <div class="menu-item"><div class="mi-left"><div class="menu-ico">⚙️</div>Settings</div>›</div>
+        <div class="menu-item"><div class="mi-left"><div class="menu-ico">📁</div>My Projects</div>›</div>
+        <div class="menu-item"><div class="mi-left"><div class="menu-ico">❓</div>Help &amp; Support</div>›</div>
+        <div class="menu-item logout" onclick="handleLogout()"><div class="mi-left"><div class="menu-ico" style="color:var(--danger);">🚪</div>Log Out</div>›</div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item" data-nav="home" onclick="switchNav('home')"><div class="nav-ico">🏠</div>Home</div>
+      <div class="nav-item" data-nav="templates" onclick="switchNav('templates')"><div class="nav-ico">🗂️</div>Templates</div>
+      <div class="nav-item active" data-nav="me" onclick="switchNav('me')"><div class="nav-ico">🙂</div>Me</div>
+    </div>
+  </div>
+
+  <!-- ============ EDITOR ============ -->
+  <div class="screen" id="screen-editor">
+    <div class="editor-top">
+      <div class="icon-btn ghost" onclick="exitEditor()">‹</div>
+      <div class="editor-top-actions">
+        <div class="icon-btn ghost" onclick="toast('Undo')">↺</div>
+        <div class="icon-btn ghost" onclick="toast('Redo')">↻</div>
+      </div>
+      <button class="save-btn" onclick="saveImage()">Save</button>
+    </div>
+
+    <div class="editor-canvas-wrap" id="canvas-wrap">
+      <div class="upload-hint" id="upload-hint">
+        <div class="upload-box" onclick="document.getElementById('fileInput').click()">＋</div>
+        <div>Tap to upload a photo</div>
+        <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleUpload(event)">
+      </div>
+      <canvas id="editCanvas" style="display:none;"></canvas>
+    </div>
+
+    <!-- Timeline / scrub strip -->
+    <div class="timeline-strip" id="timeline-strip">
+      <div class="tl-scrub">
+        <div class="tl-playbtn" onclick="toast('Preview')">▶</div>
+        <div class="tl-time">00:00<span>/00:03</span></div>
+        <div class="tl-track"><div class="tl-progress"></div><div class="tl-handle"></div></div>
+      </div>
+      <div class="tl-strip-row">
+        <div class="tl-add" onclick="document.getElementById('fileInput').click()">＋</div>
+        <div class="tl-frame" id="tl-cover">Cover</div>
+        <div class="tl-frames" id="tl-frames"></div>
+      </div>
+    </div>
+
+    <!-- Retouch / Edit main tabs -->
+    <div class="main-tabs">
+      <div class="main-tab active" data-maintab="retouch" onclick="switchMainTab('retouch')">Retouch</div>
+      <div class="main-tab" data-maintab="edit" onclick="switchMainTab('edit')">Edit</div>
+    </div>
+
+    <!-- Retouch quick row (visual, matches reference) -->
+    <div class="tool-strip alt-row" id="retouch-strip">
+      <div class="titem" onclick="toast('Auto enhance applied')"><div class="ticon">🪄</div>Auto</div>
+      <div class="titem" onclick="toast('Coming soon')"><div class="ticon">🙂</div>Face</div>
+      <div class="titem" onclick="selectTool('adjust')"><div class="ticon">💧</div>Skin</div>
+      <div class="titem" onclick="toast('Coming soon')"><div class="ticon">👁️</div>Eyes</div>
+      <div class="titem" onclick="toast('Coming soon')"><div class="ticon">⛰️</div>Contour</div>
+      <div class="titem" onclick="toast('Coming soon')"><div class="ticon">😁</div>Teeth</div>
+    </div>
+
+    <!-- Filters panel -->
+    <div class="panel" id="panel-filters">
+      <div class="filter-row" id="filter-row"></div>
+    </div>
+
+    <!-- Adjust panel -->
+    <div class="panel" id="panel-adjust">
+      <div class="adjust-row">
+        <div class="adjust-label"><span>Brightness</span><span id="val-brightness">100</span></div>
+        <input type="range" min="50" max="150" value="100" id="rng-brightness" oninput="applyAdjust()">
+      </div>
+      <div class="adjust-row">
+        <div class="adjust-label"><span>Contrast</span><span id="val-contrast">100</span></div>
+        <input type="range" min="50" max="150" value="100" id="rng-contrast" oninput="applyAdjust()">
+      </div>
+      <div class="adjust-row">
+        <div class="adjust-label"><span>Saturation</span><span id="val-saturate">100</span></div>
+        <input type="range" min="0" max="200" value="100" id="rng-saturate" oninput="applyAdjust()">
+      </div>
+      <div class="adjust-row">
+        <div class="adjust-label"><span>Warmth</span><span id="val-warmth">0</span></div>
+        <input type="range" min="-50" max="50" value="0" id="rng-warmth" oninput="applyAdjust()">
+      </div>
+      <div class="adjust-row">
+        <div class="adjust-label"><span>Blur</span><span id="val-blur">0</span></div>
+        <input type="range" min="0" max="10" value="0" id="rng-blur" oninput="applyAdjust()">
+      </div>
+    </div>
+
+    <!-- Crop panel -->
+    <div class="panel" id="panel-crop">
+      <div class="crop-row" id="crop-row"></div>
+      <div class="action-row" style="margin-top:10px;">
+        <button class="action-btn primary" onclick="applyCrop()">Apply Crop</button>
+      </div>
+    </div>
+
+    <!-- Rotate panel -->
+    <div class="panel" id="panel-rotate">
+      <div class="action-row">
+        <button class="action-btn" onclick="rotateImage(-90)">⟲ Rotate Left</button>
+        <button class="action-btn" onclick="rotateImage(90)">⟳ Rotate Right</button>
+        <button class="action-btn" onclick="flipImage()">⇋ Flip</button>
+      </div>
+    </div>
+
+    <!-- Text panel -->
+    <div class="panel" id="panel-text">
+      <div class="action-row">
+        <button class="action-btn primary" onclick="addTextOverlay()">＋ Add Text</button>
+        <button class="action-btn" onclick="clearTextOverlays()">Clear Text</button>
+      </div>
+    </div>
+
+    <div class="tool-strip" id="tool-strip" style="display:none;">
+      <div class="titem active" data-tool="filters" onclick="selectTool('filters')"><div class="ticon">🎨</div>Filters</div>
+      <div class="titem" data-tool="adjust" onclick="selectTool('adjust')"><div class="ticon">🎚️</div>Adjust</div>
+      <div class="titem" data-tool="crop" onclick="selectTool('crop')"><div class="ticon">⬛</div>Crop</div>
+      <div class="titem" data-tool="rotate" onclick="selectTool('rotate')"><div class="ticon">🔄</div>Rotate</div>
+      <div class="titem" data-tool="text" onclick="selectTool('text')"><div class="ticon">🔤</div>Text</div>
+      <div class="titem" onclick="toast('Coming soon')"><div class="ticon">🖼️</div>Overlay</div>
+      <div class="titem" onclick="toast('Coming soon')"><div class="ticon">🎬</div>Frames</div>
+      <div class="titem" onclick="toast('Coming soon')"><div class="ticon">🏷️</div>Stickers</div>
+      <div class="titem" onclick="toast('Coming soon')"><div class="ticon">🎧</div>Audio</div>
+      <div class="titem" onclick="toast('Coming soon')"><div class="ticon">🧹</div>Mosaic</div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
